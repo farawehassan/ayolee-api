@@ -9,6 +9,7 @@ const morgan = require('morgan');
 const auth = require('./routes/auth-routes');
 const products = require('./routes/product-routes');
 const reports = require('./routes/report-routes');
+const productHistory = require('./routes/productHistory-routes');
 const storeDetails = require('./routes/storeDetails-routes'); 
 const connectDb = require("./connection/database"); 
  
@@ -27,6 +28,7 @@ app.all('/*', function (req, res, next) {
 app.use('/authentication', auth);
 app.use('/product', products);
 app.use('/report', reports); 
+app.use('/history', productHistory);
 app.use(storeDetails);
 
 // create a write stream (in append mode)
