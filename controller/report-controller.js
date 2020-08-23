@@ -73,6 +73,7 @@ exports.updateDailyReportName = async (req, res, next) => {
 
   try {
     const reports = await Report.find();
+    var result; 
     for (i = 0; i < reports.length; i++) {
       if(reports[i].productName === productName) {
         await Report.updateOne({'productName': productName}, { $set: { 
@@ -81,13 +82,19 @@ exports.updateDailyReportName = async (req, res, next) => {
           function (err, result) {
             if (err) {
               console.log(err);
-              return res.status(500).send({ error: "true", message: "Updating report product name failed." });              
+              result = false;             
             } else {
-              return res.status(200).send({ error: "false", message: `Updated report product name successfully` });
+              result = true;
             }
           }
         );  
       }
+    }
+    if (!result) {
+      console.log(err);
+      return res.status(500).send({ error: "true", message: "Updating report product name failed." });              
+    } else {
+      return res.status(200).send({ error: "false", message: `Updated report product name successfully` });
     }
   } catch (error) {
     console.log(err);
