@@ -73,15 +73,15 @@ exports.updateDailyReportName = async (req, res, next) => {
 
   try {
     const reports = await Report.find();
-    for (i = 0; i < reports.length; i++){
-      if(reports[i].productName === productName){
-        Report.updateOne({'productName': productName}, { $set: { 
+    for (i = 0; i < reports.length; i++) {
+      if(reports[i].productName === productName) {
+        await Report.updateOne({'productName': productName}, { $set: { 
           'productName': updatedName,
         } },
           function (err, result) {
             if (err) {
               console.log(err);
-              return res.status(500).send({ error: "true", message: "Updating report product name failed." });
+              return res.status(500).send({ error: "true", message: "Updating report product name failed." });              
             } else {
               return res.status(200).send({ error: "false", message: `Updated report product name successfully` });
             }
