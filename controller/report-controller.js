@@ -68,8 +68,8 @@ exports.addNewDailyReport = (req, res, next) => {
 
 // Update report product name 
 exports.updateDailyReportName = async (req, res, next) => {
-  const productName = req.params.productName;
-  const updatedName = req.params.updatedName;
+  const productName = req.body.productName;
+  const updatedName = req.body.updatedName;
 
   try {
     const reports = await Report.find();
