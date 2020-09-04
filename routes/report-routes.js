@@ -10,6 +10,9 @@ router.get('/fetchAllReports', isAuth, reportController.fetchReports);
 // Add new daily report to the database
 router.post('/addNewReport', isAuth, reportController.addNewDailyReport);
 
+// Update report product name 
+router.put('/updateReportName', isAuth, reportController.updateDailyReportName);
+
 // Delete a report from the database 
 router.delete('/deleteReport/:id', isAuth, reportController.deleteDailyReport);
 

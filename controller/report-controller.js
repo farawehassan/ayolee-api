@@ -66,6 +66,31 @@ exports.addNewDailyReport = (req, res, next) => {
     });
 }
 
+// Update report product name 
+exports.updateDailyReportName = async (req, res, next) => {
+  const productName = req.body.productName;
+  const updatedName = req.body.updatedName;
+
+  try {
+    await Report.updateMany({'productName': productName}, { $set: { 
+      'productName': updatedName,
+    } },
+      function (err, result) {
+        if (err) {
+          console.log(err);
+          return res.status(500).send({ error: "true", message: "Updating report product name failed." });            
+        } else {
+          return res.status(200).send({ error: "false", message: `Updated report product name successfully` });
+        }
+      }
+    ); 
+  } catch (error) {
+    console.log(err);
+    return res.status(500).send({ error: "true", message: "Database operation failed, please try again" });
+  }
+ 
+}
+
 // Delete daily report product and update product's current quantity
 exports.deleteDailyReport = (req, res, next) => {
   const id = req.params.id;
