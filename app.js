@@ -6,13 +6,25 @@ const fs = require('fs');
 const path = require('path');
 const compression = require('compression');
 const morgan = require('morgan');
+const myserver = require('./routes/server');
 const auth = require('./routes/auth-routes');
 const products = require('./routes/product-routes');
 const reports = require('./routes/report-routes');
 const productHistory = require('./routes/productHistory-routes');
 const storeDetails = require('./routes/storeDetails-routes'); 
 const connectDb = require("./connection/database"); 
+const dotenv = require('dotenv');
+dotenv.config({ path: 'config.env' });
  
+
+process.on('uncaughtException', (err) => {
+  // eslint-disable-next-line no-console
+  console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
+  // eslint-disable-next-line no-console
+  console.log(err.name, err.message);
+  process.exit(1);
+});
+
 // parse application/json
 app.use(bodyParser.json());
 // parse application/x-www-form-urlencoded 
@@ -25,6 +37,8 @@ app.all('/*', function (req, res, next) {
   next();
 });
 
+// Routes
+app.use('', myserver);
 app.use('/authentication', auth);
 app.use('/product', products);
 app.use('/report', reports); 
@@ -47,9 +61,19 @@ const port = process.env.PORT || 3040;
 connectDb()
   .then(() => {
     app.listen(port, () => {
-      console.log("Ayolee api running");
+      console.log(`App running on port ${port}...`);
     });
   })
   .catch(err => {
     console.log("Database connection failed");
   }); 
+
+process.on('unhandledRejection', (err) => {
+    // eslint-disable-next-line no-console
+  console.log('UNHANDLED REJECTION! 💥 Shutting down...');
+    // eslint-disable-next-line no-console
+  console.log(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
+});
