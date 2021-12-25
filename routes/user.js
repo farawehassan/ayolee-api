@@ -2,7 +2,7 @@ const express = require('express')
 const { check, body } = require('express-validator')
 const controller = require('../controllers/user')
 const isAdmin = require('../middleware/is-admin')
-const isAuth = require('../middleware/is-auth')
+const isAuth = require('../middleware/is-auth') 
 const router = express.Router()
 
 router.post(
