@@ -1,8 +1,12 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
-const Schema = mongoose.Schema;
+const Schema = mongoose.Schema
 
-const reportSchema = new Schema({
+const salesSchema = new Schema({
+  customerName: {
+    type: String,
+    required: true,
+  },
   quantity: {
     type: Number,
     required: true,
@@ -27,10 +31,11 @@ const reportSchema = new Schema({
     type: String,
     required: true,
   },
-  createdAt: {
+  staff: {
     type: String,
-    required: true
+    required: true,
   },
-});
+}, { timestamps: true }
+)
 
-module.exports = mongoose.model('Reports', reportSchema);
+module.exports = mongoose.model('Sales', salesSchema)
