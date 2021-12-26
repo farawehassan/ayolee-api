@@ -79,6 +79,7 @@ exports.addNewSales = async(req, res, next) => {
         })
     })
     .catch(err => {
+      console.log(err)
       return res.status(500).send({ error: true, message: 'Database operation failed, please try again' })
     })
 }
