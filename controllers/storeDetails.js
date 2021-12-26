@@ -24,7 +24,7 @@ exports.fetchDetails = async (req, res, next) => {
     const creditors = await Creditors.find()
 
     var outstandingPaymentMadeToday = await RepaymentHistory.aggregate([
-      {$match: {paymentMode: 'Cash', createdAt: {$gte: Helpers.getCurrentTimestamp(0)}}},
+      {$match: {paymentMode: 'Cash', type: 'customer', createdAt: {$gte: Helpers.getCurrentTimestamp(0)}}},
       {$group: { _id: null, total: { $sum: '$amount' }}}
     ])
     outstandingPaymentMadeToday = Helpers.getTotalValue(outstandingPaymentMadeToday)
@@ -93,7 +93,7 @@ exports.fetchDetailsChart = async (req, res, next) => {
     /// Sales section
     var todaySales = await Sales.aggregate([
       {
-        $match: { createdAt: { $gte: Helpers.getCurrentTimestamp(0), $lte: Helpers.getCurrentEndDate() } }
+        $match: {paymentMode: { $ne: 'Personal'}, createdAt: { $gte: Helpers.getCurrentTimestamp(0), $lte: Helpers.getCurrentEndDate() } }
       },
       {
         $group: { _id: null, total: { $sum: '$totalPrice' } },

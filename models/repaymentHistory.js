@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { stringify } = require('nodemon/lib/utils')
 
 const Schema = mongoose.Schema
 
@@ -19,6 +20,12 @@ const repaymentHistorySchema = new Schema(
     amount: {
       type: Number,
       required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+      enum: ['customer', 'debts'],
+      default: 'customer'
     },
   },
   { timestamps: true }
