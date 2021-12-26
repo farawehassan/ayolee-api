@@ -90,6 +90,72 @@ exports.fetchDetailsChart = async (req, res, next) => {
 
   try {
 
+
+    /// Personal section
+    var todaySalesPersonal = await Sales.aggregate([
+      {
+        $match: {paymentMode: 'Personal', createdAt: { $gte: Helpers.getCurrentTimestamp(0), $lte: Helpers.getCurrentEndDate() } }
+      },
+      {
+        $group: { _id: null, total: { $sum: '$totalPrice' } },
+      }
+    ])
+    todaySalesPersonal = Helpers.getTotalValue(todaySalesPersonal)
+    
+    var yesterdaySalesPersonal = await Sales.aggregate([
+      {
+        $match: {paymentMode: 'Personal', createdAt: { $gte: Helpers.getCurrentTimestamp(-1), $lte: Helpers.getCurrentDate() } }
+      },
+      {
+        $group: { _id: null, total: { $sum: '$totalPrice' } },
+      }
+    ])
+    yesterdaySalesPersonal = Helpers.getTotalValue(yesterdaySalesPersonal)
+
+    var weekSalesPersonal = await Sales.aggregate([
+      {
+        $match: {paymentMode: 'Personal', createdAt: { $gte: Helpers.getCurrentTimestamp(-7), $lte: Helpers.getCurrentEndDate() } }
+      },
+      {
+        $group: { _id: null, total: { $sum: '$totalPrice' } },
+      }
+    ])
+    weekSalesPersonal = Helpers.getTotalValue(weekSalesPersonal)
+
+    var monthSalesPersonal = await Sales.aggregate([
+      {
+        $match: {paymentMode: 'Personal', createdAt: { $gte: Helpers.getCurrentTimestamp(-31), $lte: Helpers.getCurrentEndDate() } }
+      },
+      {
+        $group: { _id: null, total: { $sum: '$totalPrice' } },
+      }
+    ])
+    monthSalesPersonal = Helpers.getTotalValue(monthSalesPersonal)
+
+    var sixMonthSalesPersonal = await Sales.aggregate([
+      {
+        $match: {paymentMode: 'Personal', createdAt: { $gte: Helpers.getCurrentTimestamp(-184), $lte: Helpers.getCurrentEndDate() } }
+      },
+      {
+        $group: { _id: null, total: { $sum: '$totalPrice' } },
+      }
+    ])
+    sixMonthSalesPersonal = Helpers.getTotalValue(sixMonthSalesPersonal)
+
+    var allSalesPersonal = await Sales.aggregate([
+      {
+        $match: {paymentMode: 'Personal'}
+      },
+      {
+        $group: { _id: null, total: { $sum: '$totalPrice' } },
+      }
+    ])
+    allSalesPersonal = Helpers.getTotalValue(allSalesPersonal)
+
+
+
+
+
     /// Sales section
     var todaySales = await Sales.aggregate([
       {
@@ -219,7 +285,7 @@ exports.fetchDetailsChart = async (req, res, next) => {
     /// Profit section
     var todayProfit = await Sales.aggregate([
       {
-        $match: { createdAt: { $gte: Helpers.getCurrentTimestamp(0), $lte: Helpers.getCurrentEndDate() } }
+        $match: {paymentMode: { $ne: 'Personal'}, createdAt: { $gte: Helpers.getCurrentTimestamp(0), $lte: Helpers.getCurrentEndDate() } }
       },
       {
         $group: { _id: null, total: { $sum: { 
@@ -231,7 +297,7 @@ exports.fetchDetailsChart = async (req, res, next) => {
 
     var yesterdayProfit = await Sales.aggregate([
       {
-        $match: { createdAt: { $gte: Helpers.getCurrentTimestamp(-1), $lte: Helpers.getCurrentDate() } }
+        $match: {paymentMode: { $ne: 'Personal'}, createdAt: { $gte: Helpers.getCurrentTimestamp(-1), $lte: Helpers.getCurrentDate() } }
       },
       {
         $group: { _id: null, total: { $sum: { 
@@ -243,7 +309,7 @@ exports.fetchDetailsChart = async (req, res, next) => {
 
     var weekProfit = await Sales.aggregate([
       {
-        $match: { createdAt: { $gte: Helpers.getCurrentTimestamp(-7), $lte: Helpers.getCurrentEndDate() } }
+        $match: {paymentMode: { $ne: 'Personal'}, createdAt: { $gte: Helpers.getCurrentTimestamp(-7), $lte: Helpers.getCurrentEndDate() } }
       },
       {
         $group: { _id: null, total: { $sum: { 
@@ -255,7 +321,7 @@ exports.fetchDetailsChart = async (req, res, next) => {
 
     var monthProfit = await Sales.aggregate([
       {
-        $match: { createdAt: { $gte: Helpers.getCurrentTimestamp(-31), $lte: Helpers.getCurrentEndDate() } }
+        $match: {paymentMode: { $ne: 'Personal'}, createdAt: { $gte: Helpers.getCurrentTimestamp(-31), $lte: Helpers.getCurrentEndDate() } }
       },
       {
         $group: { _id: null, total: { $sum: { 
@@ -267,7 +333,7 @@ exports.fetchDetailsChart = async (req, res, next) => {
 
     var sixMonthProfit = await Sales.aggregate([
       {
-        $match: { createdAt: { $gte: Helpers.getCurrentTimestamp(-184), $lte: Helpers.getCurrentEndDate() } }
+        $match: {paymentMode: { $ne: 'Personal'}, createdAt: { $gte: Helpers.getCurrentTimestamp(-184), $lte: Helpers.getCurrentEndDate() } }
       },
       {
         $group: { _id: null, total: { $sum: { 
@@ -279,12 +345,91 @@ exports.fetchDetailsChart = async (req, res, next) => {
 
     var allProfit = await Sales.aggregate([
       {
+        $match: {paymentMode: { $ne: 'Personal'} } 
+      },
+      {
         $group: { _id: null, total: { $sum: { 
           $multiply : [ { $subtract: [ '$unitPrice', '$costPrice' ] }, '$quantity' ] 
         } } },
       }
     ])
     allProfit = Helpers.getTotalValue(allProfit)
+
+
+
+
+    /// Personal Profit section
+    var todayProfitPersonal = await Sales.aggregate([
+      {
+        $match: {paymentMode: 'Personal', createdAt: { $gte: Helpers.getCurrentTimestamp(0), $lte: Helpers.getCurrentEndDate() } }
+      },
+      {
+        $group: { _id: null, total: { $sum: { 
+          $multiply : [ { $subtract: [ '$unitPrice', '$costPrice' ] }, '$quantity' ] 
+        } } },
+      }
+    ])
+    todayProfitPersonal = Helpers.getTotalValue(todayProfitPersonal)
+
+    var yesterdayProfitPersonal = await Sales.aggregate([
+      {
+        $match: {paymentMode: 'Personal', createdAt: { $gte: Helpers.getCurrentTimestamp(-1), $lte: Helpers.getCurrentDate() } }
+      },
+      {
+        $group: { _id: null, total: { $sum: { 
+          $multiply : [ { $subtract: [ '$unitPrice', '$costPrice' ] }, '$quantity' ] 
+        } } },
+      }
+    ])
+    yesterdayProfitPersonal = Helpers.getTotalValue(yesterdayProfitPersonal)
+
+    var weekProfitPersonal = await Sales.aggregate([
+      {
+        $match: {paymentMode: 'Personal', createdAt: { $gte: Helpers.getCurrentTimestamp(-7), $lte: Helpers.getCurrentEndDate() } }
+      },
+      {
+        $group: { _id: null, total: { $sum: { 
+          $multiply : [ { $subtract: [ '$unitPrice', '$costPrice' ] }, '$quantity' ] 
+        } } },
+      }
+    ])
+    weekProfitPersonal = Helpers.getTotalValue(weekProfitPersonal)
+
+    var monthProfitPersonal = await Sales.aggregate([
+      {
+        $match: {paymentMode: 'Personal', createdAt: { $gte: Helpers.getCurrentTimestamp(-31), $lte: Helpers.getCurrentEndDate() } }
+      },
+      {
+        $group: { _id: null, total: { $sum: { 
+          $multiply : [ { $subtract: [ '$unitPrice', '$costPrice' ] }, '$quantity' ] 
+        } } },
+      }
+    ])
+    monthProfitPersonal = Helpers.getTotalValue(monthProfitPersonal)
+
+    var sixMonthProfitPersonal = await Sales.aggregate([
+      {
+        $match: {paymentMode: 'Personal', createdAt: { $gte: Helpers.getCurrentTimestamp(-184), $lte: Helpers.getCurrentEndDate() } }
+      },
+      {
+        $group: { _id: null, total: { $sum: { 
+          $multiply : [ { $subtract: [ '$unitPrice', '$costPrice' ] }, '$quantity' ] 
+        } } },
+      }
+    ])
+    sixMonthProfitPersonal = Helpers.getTotalValue(sixMonthProfitPersonal)
+
+    var allProfitPersonal = await Sales.aggregate([
+      {
+        $match: {paymentMode: 'Personal' } 
+      },
+      {
+        $group: { _id: null, total: { $sum: { 
+          $multiply : [ { $subtract: [ '$unitPrice', '$costPrice' ] }, '$quantity' ] 
+        } } },
+      }
+    ])
+    allProfitPersonal = Helpers.getTotalValue(allProfitPersonal)
 
 
 
@@ -406,12 +551,12 @@ exports.fetchDetailsChart = async (req, res, next) => {
     allPurchases = Helpers.getTotalValue(allPurchases)
 
     var storeDetails = {
-      yesterday: {yesterdaySales, yesterdayTransferredSales, yesterdayProfit, yesterdayExpenses, yesterdayPurchases},
-      today: {todaySales, todayTransferredSales, todayProfit, todayExpenses, todayPurchases},
-      week: {weekSales, weekTransferredSales, weekProfit, weekExpenses, weekPurchases},
-      thisMonth: {monthSales, monthTransferredSales, monthProfit, monthExpenses, monthPurchases},
-      sixMonth: {sixMonthSales, sixMonthTransferredSales, sixMonthProfit, sixMonthExpenses, sixMonthPurchases},
-      allTime: {allSales, allTransferredSales, allProfit, allExpenses, allPurchases},
+      yesterday: {yesterdaySales, yesterdaySalesPersonal, yesterdayTransferredSales, yesterdayProfit, yesterdayProfitPersonal, yesterdayExpenses, yesterdayPurchases},
+      today: {todaySales, todaySalesPersonal, todayTransferredSales, todayProfit, todayProfitPersonal, todayExpenses, todayPurchases},
+      week: {weekSales, weekSalesPersonal, weekTransferredSales, weekProfit, weekProfitPersonal, weekExpenses, weekPurchases},
+      thisMonth: {monthSales, monthSalesPersonal, monthTransferredSales, monthProfit, monthProfitPersonal, monthExpenses, monthPurchases},
+      sixMonth: {sixMonthSales, sixMonthSalesPersonal, sixMonthTransferredSales, sixMonthProfit, sixMonthProfitPersonal, sixMonthExpenses, sixMonthPurchases},
+      allTime: {allSales, allSalesPersonal, allTransferredSales, allProfit, allProfitPersonal, allExpenses, allPurchases},
     }
 
     return res.status(200).send({ error: false, message: 'Store details successfully fetched', data: storeDetails }); 
