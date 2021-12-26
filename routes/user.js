@@ -2,7 +2,7 @@ const express = require('express')
 const { check, body } = require('express-validator')
 const controller = require('../controllers/user')
 const isAdmin = require('../middleware/is-admin')
-const isAuth = require('../middleware/is-auth') 
+//const isAuth = require('../middleware/is-auth') 
 const router = express.Router()
 
 router.post(
@@ -31,7 +31,7 @@ router.put('/edit', isAuth, controller.editUser)
 
 router.put(
   '/changePin',
-  isAuth,
+  //isAuth,
   [
     body('currentPin', 'Please enter a 4 digit valid pin')
       .isNumeric()
@@ -48,7 +48,7 @@ router.put(
 
 router.put('/resetPin/:id', isAdmin, controller.resetPin)
 
-router.get('/getCurrentUser', isAuth, controller.getCurrentUser)
+router.get('/getCurrentUser', controller.getCurrentUser) // isAuth
 
 router.get('/getAll', isAdmin, controller.getUsers)
 
