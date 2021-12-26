@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 const salesSchema = new Schema({
   customerName: {
     type: String,
-    required: false,
+    required: true,
   },
   quantity: {
     type: Number,
