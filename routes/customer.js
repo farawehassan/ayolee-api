@@ -1,6 +1,6 @@
 const express = require('express')
 const controller = require('../controllers/customer')
-const isAuth = require('../middleware/is-auth')
+const isAuth = require('../middleware/auth')
 const router = express.Router()
 
 // Fetch all customers from the database

@@ -1,6 +1,6 @@
 const express = require('express')
 const controller = require('../controllers/productCategories')
-const isAuth = require('../middleware/is-auth')
+const isAuth = require('../middleware/auth')
 const router = express.Router()
 
 router.post('/create', isAuth, controller.create)

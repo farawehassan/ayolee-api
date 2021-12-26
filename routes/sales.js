@@ -1,7 +1,7 @@
 const path = require('path')
 const express = require('express')
 const salesController = require('../controllers/sales')
-const isAuth = require('../middleware/is-auth')
+const isAuth = require('../middleware/auth')
 const router = express.Router()
 
 // Fetch all sales from the database

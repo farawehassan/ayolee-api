@@ -1,6 +1,6 @@
 const express = require('express')
 const storeDetailsController = require('../controllers/storeDetails')
-const isAuth = require('../middleware/is-auth')
+const isAuth = require('../middleware/auth')
 const router = express.Router()
 
 // Fetch the store details from the server
