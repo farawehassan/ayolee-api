@@ -103,7 +103,7 @@ exports.fetchDetailsChart = async (req, res, next) => {
     
     var yesterdaySales = await Sales.aggregate([
       {
-        $match: { createdAt: { $gte: Helpers.getCurrentTimestamp(-1), $lte: Helpers.getCurrentDate() } }
+        $match: {paymentMode: { $ne: 'Personal'}, createdAt: { $gte: Helpers.getCurrentTimestamp(-1), $lte: Helpers.getCurrentDate() } }
       },
       {
         $group: { _id: null, total: { $sum: '$totalPrice' } },
@@ -113,7 +113,7 @@ exports.fetchDetailsChart = async (req, res, next) => {
 
     var weekSales = await Sales.aggregate([
       {
-        $match: { createdAt: { $gte: Helpers.getCurrentTimestamp(-7), $lte: Helpers.getCurrentEndDate() } }
+        $match: {paymentMode: { $ne: 'Personal'}, createdAt: { $gte: Helpers.getCurrentTimestamp(-7), $lte: Helpers.getCurrentEndDate() } }
       },
       {
         $group: { _id: null, total: { $sum: '$totalPrice' } },
@@ -123,7 +123,7 @@ exports.fetchDetailsChart = async (req, res, next) => {
 
     var monthSales = await Sales.aggregate([
       {
-        $match: { createdAt: { $gte: Helpers.getCurrentTimestamp(-31), $lte: Helpers.getCurrentEndDate() } }
+        $match: {paymentMode: { $ne: 'Personal'}, createdAt: { $gte: Helpers.getCurrentTimestamp(-31), $lte: Helpers.getCurrentEndDate() } }
       },
       {
         $group: { _id: null, total: { $sum: '$totalPrice' } },
@@ -133,7 +133,7 @@ exports.fetchDetailsChart = async (req, res, next) => {
 
     var sixMonthSales = await Sales.aggregate([
       {
-        $match: { createdAt: { $gte: Helpers.getCurrentTimestamp(-184), $lte: Helpers.getCurrentEndDate() } }
+        $match: {paymentMode: { $ne: 'Personal'}, createdAt: { $gte: Helpers.getCurrentTimestamp(-184), $lte: Helpers.getCurrentEndDate() } }
       },
       {
         $group: { _id: null, total: { $sum: '$totalPrice' } },
@@ -142,6 +142,9 @@ exports.fetchDetailsChart = async (req, res, next) => {
     sixMonthSales = Helpers.getTotalValue(sixMonthSales)
 
     var allSales = await Sales.aggregate([
+      {
+        $match: {paymentMode: { $ne: 'Personal'} }
+      },
       {
         $group: { _id: null, total: { $sum: '$totalPrice' } },
       }
