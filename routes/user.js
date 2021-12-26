@@ -27,7 +27,7 @@ router.post(
   controller.signup
 )
 
-router.put('/edit', isAuth, controller.editUser)
+router.put('/edit', controller.editUser) // isAuth
 
 router.put(
   '/changePin',
