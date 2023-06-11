@@ -6,7 +6,6 @@ const fs = require('fs')
 const path = require('path')
 const compression = require('compression')
 const morgan = require('morgan')
-const connectDb = require('./connection/database')
 const myServer = require('./routes/server')
 const user = require('./routes/user')
 const expenses = require('./routes/expenses')
@@ -20,6 +19,8 @@ const creditor = require('./routes/creditors')
 const storeDetails = require('./routes/storeDetails')
 const dotenv = require('dotenv')
 dotenv.config({ path: 'config.env' })
+
+const connectDb = require('./connection/database')
 
 process.on('uncaughtException', (err) => {
   // eslint-disable-next-line no-console
